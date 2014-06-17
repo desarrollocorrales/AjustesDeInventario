@@ -62,7 +62,7 @@ namespace AjustesDeInventario.GUIs
                 if (prueba_de_conexion == true)
                 {
                     MessageBox.Show("La conexión se ha realizado con exito!!!");
-                    lblEstadoMicrosip.Text = "Sucursal: " + objMicrosip.Sucusal;
+                    lblEstadoMicrosip.Text = "Sucursal: " + FbDal.Empresa;
                     lblEstadoMicrosip.ForeColor = System.Drawing.Color.Green;
                     PruebaDeConexion = true;
                 }
@@ -200,9 +200,9 @@ namespace AjustesDeInventario.GUIs
             Firebird_DAL FbDal = new Firebird_DAL(objMicrosip);
 
             //Obtener todos los articulos de Microsip con su clave principal
+            List<Articulo> lstArticulos = FbDal.ObtenerArticulos();
 
             //Ejecutar el proceso para actualizar los detos de Microsip
-
 
             Logger.AgregarLog("******************************* Final ******************************");
             Logger.AgregarLog(); 
