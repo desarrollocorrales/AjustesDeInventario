@@ -36,6 +36,13 @@
             this.lblEstadoMicrosip = new System.Windows.Forms.Label();
             this.btnBuscarMicrosip = new System.Windows.Forms.Button();
             this.txbArchivoMicrosip = new System.Windows.Forms.TextBox();
+            this.pnFiltros = new System.Windows.Forms.Panel();
+            this.cbConceptoSalida = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cbConceptoEntrada = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbAlmacenes = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gbInventario = new System.Windows.Forms.GroupBox();
             this.btnBuscarExcel = new System.Windows.Forms.Button();
@@ -51,7 +58,9 @@
             this.colFaltante = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colSobrante = new DevExpress.XtraGrid.Columns.GridColumn();
             this.dialogoArchivos = new System.Windows.Forms.OpenFileDialog();
+            this.button1 = new System.Windows.Forms.Button();
             this.gbMicrosip.SuspendLayout();
+            this.pnFiltros.SuspendLayout();
             this.gbInventario.SuspendLayout();
             this.gbAcciones.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridResultados)).BeginInit();
@@ -62,7 +71,7 @@
             // btnProcesar
             // 
             this.btnProcesar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnProcesar.Location = new System.Drawing.Point(302, 518);
+            this.btnProcesar.Location = new System.Drawing.Point(302, 618);
             this.btnProcesar.Margin = new System.Windows.Forms.Padding(4);
             this.btnProcesar.Name = "btnProcesar";
             this.btnProcesar.Size = new System.Drawing.Size(181, 31);
@@ -89,19 +98,21 @@
             this.gbMicrosip.Controls.Add(this.btnBuscarMicrosip);
             this.gbMicrosip.Controls.Add(this.txbArchivoMicrosip);
             this.gbMicrosip.Controls.Add(this.label1);
+            this.gbMicrosip.Controls.Add(this.pnFiltros);
             this.gbMicrosip.Location = new System.Drawing.Point(12, 38);
             this.gbMicrosip.Name = "gbMicrosip";
-            this.gbMicrosip.Size = new System.Drawing.Size(760, 115);
+            this.gbMicrosip.Size = new System.Drawing.Size(760, 190);
             this.gbMicrosip.TabIndex = 3;
             this.gbMicrosip.TabStop = false;
             this.gbMicrosip.Text = "Datos Microsip";
             // 
             // btnPruebaConexion
             // 
-            this.btnPruebaConexion.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnPruebaConexion.Location = new System.Drawing.Point(316, 51);
+            this.btnPruebaConexion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPruebaConexion.Location = new System.Drawing.Point(666, 19);
             this.btnPruebaConexion.Name = "btnPruebaConexion";
-            this.btnPruebaConexion.Size = new System.Drawing.Size(128, 26);
+            this.btnPruebaConexion.Size = new System.Drawing.Size(88, 134);
             this.btnPruebaConexion.TabIndex = 6;
             this.btnPruebaConexion.Text = "Probar Conexion";
             this.btnPruebaConexion.UseVisualStyleBackColor = true;
@@ -114,9 +125,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEstadoMicrosip.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEstadoMicrosip.Location = new System.Drawing.Point(7, 80);
+            this.lblEstadoMicrosip.Location = new System.Drawing.Point(7, 156);
             this.lblEstadoMicrosip.Name = "lblEstadoMicrosip";
-            this.lblEstadoMicrosip.Size = new System.Drawing.Size(746, 32);
+            this.lblEstadoMicrosip.Size = new System.Drawing.Size(746, 31);
             this.lblEstadoMicrosip.TabIndex = 5;
             this.lblEstadoMicrosip.Text = "lblEstadoMicrosip";
             this.lblEstadoMicrosip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -127,7 +138,7 @@
             this.btnBuscarMicrosip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBuscarMicrosip.Location = new System.Drawing.Point(590, 19);
             this.btnBuscarMicrosip.Name = "btnBuscarMicrosip";
-            this.btnBuscarMicrosip.Size = new System.Drawing.Size(70, 26);
+            this.btnBuscarMicrosip.Size = new System.Drawing.Size(67, 26);
             this.btnBuscarMicrosip.TabIndex = 4;
             this.btnBuscarMicrosip.Text = "Buscar";
             this.btnBuscarMicrosip.UseVisualStyleBackColor = true;
@@ -142,6 +153,85 @@
             this.txbArchivoMicrosip.Name = "txbArchivoMicrosip";
             this.txbArchivoMicrosip.Size = new System.Drawing.Size(382, 26);
             this.txbArchivoMicrosip.TabIndex = 3;
+            // 
+            // pnFiltros
+            // 
+            this.pnFiltros.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnFiltros.Controls.Add(this.cbConceptoSalida);
+            this.pnFiltros.Controls.Add(this.label6);
+            this.pnFiltros.Controls.Add(this.cbConceptoEntrada);
+            this.pnFiltros.Controls.Add(this.label3);
+            this.pnFiltros.Controls.Add(this.cbAlmacenes);
+            this.pnFiltros.Controls.Add(this.label5);
+            this.pnFiltros.Location = new System.Drawing.Point(10, 51);
+            this.pnFiltros.Name = "pnFiltros";
+            this.pnFiltros.Size = new System.Drawing.Size(650, 102);
+            this.pnFiltros.TabIndex = 13;
+            this.pnFiltros.Visible = false;
+            // 
+            // cbConceptoSalida
+            // 
+            this.cbConceptoSalida.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbConceptoSalida.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbConceptoSalida.FormattingEnabled = true;
+            this.cbConceptoSalida.Location = new System.Drawing.Point(192, 70);
+            this.cbConceptoSalida.Name = "cbConceptoSalida";
+            this.cbConceptoSalida.Size = new System.Drawing.Size(455, 26);
+            this.cbConceptoSalida.TabIndex = 11;
+            this.cbConceptoSalida.SelectedIndexChanged += new System.EventHandler(this.cbConceptoSalida_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(51, 73);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(135, 18);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Concepto de salida:";
+            // 
+            // cbConceptoEntrada
+            // 
+            this.cbConceptoEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbConceptoEntrada.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbConceptoEntrada.FormattingEnabled = true;
+            this.cbConceptoEntrada.Location = new System.Drawing.Point(192, 38);
+            this.cbConceptoEntrada.Name = "cbConceptoEntrada";
+            this.cbConceptoEntrada.Size = new System.Drawing.Size(455, 26);
+            this.cbConceptoEntrada.TabIndex = 8;
+            this.cbConceptoEntrada.SelectedIndexChanged += new System.EventHandler(this.cbConceptoEntrada_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(118, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 18);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Almacen:";
+            // 
+            // cbAlmacenes
+            // 
+            this.cbAlmacenes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbAlmacenes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAlmacenes.FormattingEnabled = true;
+            this.cbAlmacenes.Location = new System.Drawing.Point(192, 6);
+            this.cbAlmacenes.Name = "cbAlmacenes";
+            this.cbAlmacenes.Size = new System.Drawing.Size(455, 26);
+            this.cbAlmacenes.TabIndex = 7;
+            this.cbAlmacenes.SelectedIndexChanged += new System.EventHandler(this.cbAlmacenes_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(36, 41);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(150, 18);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Concepto de entrada:";
             // 
             // label2
             // 
@@ -161,7 +251,7 @@
             this.gbInventario.Controls.Add(this.btnBuscarExcel);
             this.gbInventario.Controls.Add(this.txbArchivoExcel);
             this.gbInventario.Controls.Add(this.label4);
-            this.gbInventario.Location = new System.Drawing.Point(12, 159);
+            this.gbInventario.Location = new System.Drawing.Point(12, 234);
             this.gbInventario.Name = "gbInventario";
             this.gbInventario.Size = new System.Drawing.Size(760, 72);
             this.gbInventario.TabIndex = 5;
@@ -204,9 +294,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbAcciones.Controls.Add(this.gridResultados);
-            this.gbAcciones.Location = new System.Drawing.Point(12, 237);
+            this.gbAcciones.Location = new System.Drawing.Point(12, 312);
             this.gbAcciones.Name = "gbAcciones";
-            this.gbAcciones.Size = new System.Drawing.Size(760, 274);
+            this.gbAcciones.Size = new System.Drawing.Size(760, 299);
             this.gbAcciones.TabIndex = 6;
             this.gbAcciones.TabStop = false;
             this.gbAcciones.Text = "Resultados del inventario";
@@ -220,7 +310,7 @@
             this.gridResultados.Location = new System.Drawing.Point(6, 25);
             this.gridResultados.MainView = this.gvResultados;
             this.gridResultados.Name = "gridResultados";
-            this.gridResultados.Size = new System.Drawing.Size(748, 243);
+            this.gridResultados.Size = new System.Drawing.Size(748, 268);
             this.gridResultados.TabIndex = 0;
             this.gridResultados.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvResultados});
@@ -424,11 +514,22 @@
             this.dialogoArchivos.FileName = "*.set";
             this.dialogoArchivos.Filter = "Archivos .SET | *.set";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(691, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Frm_Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 562);
+            this.ClientSize = new System.Drawing.Size(784, 662);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.gbAcciones);
             this.Controls.Add(this.gbInventario);
             this.Controls.Add(this.label2);
@@ -441,6 +542,8 @@
             this.Load += new System.EventHandler(this.Frm_Principal_Load);
             this.gbMicrosip.ResumeLayout(false);
             this.gbMicrosip.PerformLayout();
+            this.pnFiltros.ResumeLayout(false);
+            this.pnFiltros.PerformLayout();
             this.gbInventario.ResumeLayout(false);
             this.gbInventario.PerformLayout();
             this.gbAcciones.ResumeLayout(false);
@@ -475,5 +578,13 @@
         private DevExpress.XtraGrid.Columns.GridColumn colFaltante;
         private DevExpress.XtraGrid.Columns.GridColumn colSobrante;
         private DevExpress.XtraGrid.Columns.GridColumn colDescripcion;
+        private System.Windows.Forms.Panel pnFiltros;
+        private System.Windows.Forms.ComboBox cbConceptoSalida;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox cbConceptoEntrada;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cbAlmacenes;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button1;
     }
 }

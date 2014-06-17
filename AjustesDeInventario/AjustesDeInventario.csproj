@@ -76,8 +76,11 @@
       <DependentUpon>Frm_Principal.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
+    <Compile Include="Modelos\Almacen.cs" />
     <Compile Include="Modelos\Articulo.cs" />
     <Compile Include="Modelos\Cedula.cs" />
+    <Compile Include="Modelos\ConceptoInventario.cs" />
+    <Compile Include="Modelos\FiltrosInventario.cs" />
     <Compile Include="Modelos\Microsip.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

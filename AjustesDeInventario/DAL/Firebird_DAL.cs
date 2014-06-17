@@ -9,6 +9,7 @@ namespace AjustesDeInventario.DAL
 {
     public class Firebird_DAL
     {
+        private uint DoctoID;
         private Microsip objMicrosip;
         private FbConnection Conexion;
         private FbCommand Comando;
@@ -102,28 +103,139 @@ namespace AjustesDeInventario.DAL
             return lstArticulos;
         }
 
-        public bool ExportarResultadosAMicrosip()
+        public List<Almacen> ObtenerAlmacenes()
+        {
+            List<Almacen> lstAlmacenes = new List<Almacen>();
+
+            try
+            {
+                Comando.Connection = Conexion;
+                Conexion.ConnectionString = getStringConnection();
+                Conexion.Open();
+
+                Comando.CommandText = "SELECT ALMACEN_ID, NOMBRE FROM ALMACENES";
+
+                Adapter.SelectCommand = Comando;
+                DataTable dt = new DataTable();
+                Adapter.Fill(dt);
+
+                Almacen almacen;
+                foreach (DataRow row in dt.Rows)
+                {
+                    almacen = new Almacen();
+                    almacen.ID = Convert.ToInt32(row["ALMACEN_ID"]);
+                    almacen.Nombre = Convert.ToString(row["NOMBRE"]);
+
+                    lstAlmacenes.Add(almacen);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.AgregarLog("......" + ex.Message);
+            }
+            finally
+            {
+                if (Conexion.State != ConnectionState.Closed)
+                    Conexion.Close();
+            }
+
+            return lstAlmacenes;
+        }
+
+        public List<ConceptoInventario> ObtenerConceptosInventario()
+        {
+            List<ConceptoInventario> lstConceptosInventario = new List<ConceptoInventario>();
+
+            try
+            {
+                Comando.Connection = Conexion;
+                Conexion.ConnectionString = getStringConnection();
+                Conexion.Open();
+
+                Comando.CommandText = "SELECT CONCEPTO_IN_ID, NOMBRE FROM CONCEPTOS_IN";
+
+                Adapter.SelectCommand = Comando;
+                DataTable dt = new DataTable();
+                Adapter.Fill(dt);
+
+                ConceptoInventario conceptoInventario;
+                foreach (DataRow row in dt.Rows)
+                {
+                    conceptoInventario = new ConceptoInventario();
+                    conceptoInventario.ID = Convert.ToInt32(row["CONCEPTO_IN_ID"]);
+                    conceptoInventario.Nombre = Convert.ToString(row["NOMBRE"]);
+
+                    lstConceptosInventario.Add(conceptoInventario);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.AgregarLog("......" + ex.Message);
+            }
+            finally
+            {
+                if (Conexion.State != ConnectionState.Closed)
+                    Conexion.Close();
+            }
+
+            return lstConceptosInventario;
+        }
+
+        public DateTime obtenerFechaDelServidor()
+        {
+            DateTime fecha = new DateTime();
+
+            try
+            {
+                Comando.Connection = Conexion;
+                Conexion.ConnectionString = getStringConnection();
+                Conexion.Open();
+
+                Comando.CommandText = "Select Cast('Now' As Date) From rdb$database";
+                object obj = Comando.ExecuteScalar();
+
+                fecha = Convert.ToDateTime(obj);
+            }
+            catch (Exception ex)
+            {
+                Logger.AgregarLog("......" + ex.Message);
+            }
+            finally
+            {
+                if (Conexion.State != ConnectionState.Closed)
+                    Conexion.Close();
+            }
+
+            return fecha;
+        }
+
+        public bool ExportarResultadosAMicrosip(List<Cedula> lstResultados, List<Articulo> lstArticulos)
         {
             bool bExito = false;
 
             Conexion.ConnectionString = getStringConnection();
             Conexion.Open();
-            FbTransaction transaccion =  Conexion.BeginTransaction();
+            FbTransaction Transaccion =  Conexion.BeginTransaction();
             try
             {
-                //Crear Encabezado
-
-                //Insertar Faltantes
-
+                //Crear encabezado entradas
+                CrearEncabezado(Conexion, Transaccion, "E");
                 //Insertar Sobrantes
+                List<Cedula> lstSobrantes = lstResultados.FindAll(o => o.Sobrante != 0);
+                InsertarDetalles(Conexion, Transaccion, "E", lstSobrantes, lstArticulos);
 
+                //Crear encabezado salidas
+                CrearEncabezado(Conexion, Transaccion, "S");
+                //Insertar Falantes
+                List<Cedula> lstFaltantes = lstResultados.FindAll(o => o.Faltante != 0);
+                InsertarDetalles(Conexion, Transaccion, "S", lstFaltantes, lstArticulos);
 
-                transaccion.Commit();
+                Transaccion.Commit();
                 bExito = true;
             }
             catch (Exception ex)
             {
-                transaccion.Rollback();
+                Transaccion.Rollback();
                 bExito = false;
                 FbError = ex.Message;
             }
@@ -135,10 +247,102 @@ namespace AjustesDeInventario.DAL
 
             return bExito;
         }
-        private void CrearEncabezado(FbConnection objConexion)
+        private uint ObtenerID_Docto(FbConnection objConexion, FbTransaction objTransaccion)
         {
+            uint IdDocto = 0;
             Comando.Connection = objConexion;
-            Comando.CommandText = "";
+            Comando.Transaction = objTransaccion;
+            Comando.CommandText = "SELECT GEN_ID(ID_DOCTOS, 1) FROM rdb$database";
+
+            object obj = Comando.ExecuteScalar();
+            IdDocto = Convert.ToUInt32(obj);
+
+            return IdDocto;
+        }
+        private void CrearEncabezado(FbConnection objConexion, FbTransaction objTransaccion, string Naturaleza)
+        {
+            int ConceptoID = 0;
+            if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
+            else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
+
+            Comando.Connection = objConexion;
+            Comando.Transaction = objTransaccion;
+            Comando.CommandText =
+                String.Format(@"INSERT INTO 
+                                  DOCTOS_IN (DOCTO_IN_ID, ALMACEN_ID, CONCEPTO_IN_ID, 
+                                             FOLIO, NATURALEZA_CONCEPTO, FECHA, SISTEMA_ORIGEN) 
+                                VALUES
+                                  (-1, {0}, {1}, '{3}{2}', '{3}', '{4}', 'IN')
+                                RETURNING DOCTO_IN_ID", 
+                                  FiltrosInventario.AlmacenID,
+                                  ConceptoID,
+                                  FiltrosInventario.FechaServer.ToString("ddMMyyyy"),
+                                  Naturaleza,
+                                  FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
+
+            object obj = Comando.ExecuteScalar();
+
+            //Obtenemos el Id de la insercion
+            DoctoID = Convert.ToUInt32(obj);
+
+            if (Naturaleza == "E")
+            {
+                Logger.AgregarLog("......... Se a creado encabezado para las entradas con ID: " + DoctoID +
+                                  " y Folio: " + Naturaleza + FiltrosInventario.FechaServer.ToString("ddMMyyyy"));
+            }
+            else if (Naturaleza == "S")
+            {
+                Logger.AgregarLog("......... Se a creado encabezado para las salidas con ID: " + DoctoID +
+                                  " y Folio: " + Naturaleza + FiltrosInventario.FechaServer.ToString("ddMMyyyy"));
+            }
+        }
+        private void InsertarDetalles(FbConnection objConexion, FbTransaction objTransaccion, 
+                                      string Naturaleza, List<Cedula> lstDetalles, List<Articulo> lstArticulos)
+        {
+            int ConceptoID = 0;
+            if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
+            else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
+
+            Comando.Connection = objConexion;
+            Comando.Transaction = objTransaccion;
+
+            foreach (Cedula Movimiento in lstDetalles)
+            {
+                double Unidades = 0;
+                if (Naturaleza == "E") { Unidades = Movimiento.Sobrante; }
+                else if (Naturaleza == "S") { Unidades = Movimiento.Faltante; }
+
+                Articulo objArticulo = lstArticulos.Find(o => o.Clave == Movimiento.Clave);
+                if (objArticulo == null)
+                {
+                    throw new Exception("No se encontro el articulo con clave: " + Movimiento.Clave);
+                }
+
+                Comando.CommandText =
+                    String.Format(@"INSERT INTO DOCTOS_IN_DET
+                                        (DOCTO_IN_DET_ID, DOCTO_IN_ID, ALMACEN_ID, CONCEPTO_IN_ID, 
+                                         CLAVE_ARTICULO, ARTICULO_ID, TIPO_MOVTO, UNIDADES, COSTO_UNITARIO, 
+                                         COSTO_TOTAL, APLICADO, METODO_COSTEO, FECHA)
+                                    VALUES
+                                        (-1, {0}, {1}, {2}, 
+                                         '{3}', {4}, '{5}', {6}, {7}, ({6}*{7}),
+                                         'S', 'C', '{8}')",
+                                      DoctoID, 
+                                      FiltrosInventario.AlmacenID, 
+                                      ConceptoID,
+                                      objArticulo.Clave,
+                                      objArticulo.Articulo_ID,
+                                      Naturaleza,
+                                      Unidades,
+                                      Movimiento.CostoUnitario,
+                                      FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
+
+                Comando.ExecuteNonQuery();
+
+                Logger.AgregarLog("............ Insertado movimiento con naturaleza '" + Naturaleza + "'" +
+                                  " | Clave Articulo: " + objArticulo.Clave + " | Unidades: " + Unidades + 
+                                  " | Costo Unitario: " + Movimiento.CostoUnitario);
+            }
         }
 
         private string getStringConnection()

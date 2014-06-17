@@ -42,7 +42,7 @@ namespace AjustesDeInventario.Modelos
             }
             get
             {
-                _costoUnitario = Math.Round(_costoUnitario, 2, MidpointRounding.AwayFromZero);
+                _costoUnitario = Math.Round(_costoUnitario, 5, MidpointRounding.AwayFromZero);
                 return _costoUnitario;
             }
         }
@@ -55,7 +55,7 @@ namespace AjustesDeInventario.Modelos
             }
             get
             {
-                _faltante = Math.Round(_faltante, 2, MidpointRounding.AwayFromZero);
+                _faltante = Math.Round(_faltante, 5, MidpointRounding.AwayFromZero);
                 return _faltante;
             }
         }
@@ -68,7 +68,7 @@ namespace AjustesDeInventario.Modelos
             }
             get
             {
-                _sobrante = Math.Round(_sobrante, 2, MidpointRounding.AwayFromZero);
+                _sobrante = Math.Round(_sobrante, 5, MidpointRounding.AwayFromZero);
                 return _sobrante;
             }
         }

@@ -9,12 +9,12 @@ using AjustesDeInventario.Modelos;
 using LinqToExcel;
 using Remotion.Data.Linq;
 using Sofbr;
-using AjustesDeInventario.DAL;
 
 namespace AjustesDeInventario.GUIs
 {
     public partial class Frm_Principal : Form
     {
+        private string Empresa;
         private string RutaArchivoMicrosip;
         private string RutaArchivoExcel;
         private Microsip objMicrosip;
@@ -62,9 +62,23 @@ namespace AjustesDeInventario.GUIs
                 if (prueba_de_conexion == true)
                 {
                     MessageBox.Show("La conexión se ha realizado con exito!!!");
+
+                    Empresa = FbDal.Empresa;
                     lblEstadoMicrosip.Text = "Sucursal: " + FbDal.Empresa;
                     lblEstadoMicrosip.ForeColor = System.Drawing.Color.Green;
                     PruebaDeConexion = true;
+
+                    cbAlmacenes.DataSource = FbDal.ObtenerAlmacenes();
+                    cbAlmacenes.DisplayMember = "Nombre";
+                    cbAlmacenes.ValueMember = "ID";
+                    cbConceptoEntrada.DataSource = FbDal.ObtenerConceptosInventario();
+                    cbConceptoEntrada.DisplayMember = "Nombre";
+                    cbConceptoEntrada.ValueMember = "ID";
+                    cbConceptoSalida.DataSource = FbDal.ObtenerConceptosInventario();
+                    cbConceptoSalida.DisplayMember = "Nombre";
+                    cbConceptoSalida.ValueMember = "ID";
+                    FiltrosInventario.FechaServer = FbDal.obtenerFechaDelServidor();
+                    pnFiltros.Visible = true;
                 }
                 else
                 {
@@ -76,6 +90,11 @@ namespace AjustesDeInventario.GUIs
                     lblEstadoMicrosip.Text = "Error: " + FbDal.FbError;
                     lblEstadoMicrosip.ForeColor = System.Drawing.Color.Red;
                     PruebaDeConexion = false;
+
+                    cbAlmacenes.DataSource = null;
+                    cbConceptoEntrada.DataSource = null;
+                    cbConceptoSalida.DataSource = null;
+                    pnFiltros.Visible = false;
                 }
             }
         }
@@ -158,8 +177,13 @@ namespace AjustesDeInventario.GUIs
                 if (lstDatosCedula.Count != 0)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("Este proceso actualizará la informacion de Microsip para la Empresa: " + objMicrosip.Sucusal);
+                    sb.AppendLine("Este proceso actualizará la informacion de Microsip para la Empresa: " + Empresa);
                     sb.AppendLine("(Una vez realizado el proceso no puede ser deshecho)");
+                    sb.AppendLine();
+                    sb.AppendLine("Almacen: " + ((Almacen)(cbAlmacenes.SelectedItem)).Nombre);
+                    sb.AppendLine("Concepto de entrada: " + ((ConceptoInventario)(cbConceptoEntrada.SelectedItem)).Nombre);
+                    sb.AppendLine("Concepto de salida: " + ((ConceptoInventario)(cbConceptoSalida.SelectedItem)).Nombre);
+                    sb.AppendLine();
                     sb.AppendLine("¿La información es correcta?");
                     DialogResult dr = MessageBox.Show(sb.ToString(), "Validar", 
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -203,6 +227,15 @@ namespace AjustesDeInventario.GUIs
             List<Articulo> lstArticulos = FbDal.ObtenerArticulos();
 
             //Ejecutar el proceso para actualizar los detos de Microsip
+            bool exito = FbDal.ExportarResultadosAMicrosip(lstDatosCedula, lstArticulos);
+            if (exito == true)
+            {
+                MessageBox.Show("todo bien");
+            }
+            else
+            {
+                MessageBox.Show(FbDal.FbError);
+            }
 
             Logger.AgregarLog("******************************* Final ******************************");
             Logger.AgregarLog(); 
@@ -211,6 +244,33 @@ namespace AjustesDeInventario.GUIs
         private void Frm_Principal_Load(object sender, EventArgs e)
         {
             lstDatosCedula = new List<Cedula>();
+            lblEstadoMicrosip.Text = "Sin conexion a Microsip";
+            FiltrosInventario.AlmacenID = 0;
+            FiltrosInventario.ConceptoEntradaID = 0;
+            FiltrosInventario.ConceptoSalidaID = 0;
+        }
+
+        private void cbAlmacenes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrosInventario.AlmacenID = ((Almacen)(cbAlmacenes.SelectedItem)).ID;
+        }
+
+        private void cbConceptoEntrada_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrosInventario.ConceptoEntradaID = ((ConceptoInventario)(cbConceptoEntrada.SelectedItem)).ID;
+        }
+
+        private void cbConceptoSalida_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FiltrosInventario.ConceptoSalidaID = ((ConceptoInventario)(cbConceptoSalida.SelectedItem)).ID;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("{ " + FiltrosInventario.AlmacenID + " | " +
+                            FiltrosInventario.ConceptoEntradaID + " | " +
+                            FiltrosInventario.ConceptoSalidaID + " | " +
+                            FiltrosInventario.FechaServer + " }");
         }
     }
 }
