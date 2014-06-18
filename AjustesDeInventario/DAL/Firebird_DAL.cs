@@ -238,6 +238,7 @@ namespace AjustesDeInventario.DAL
                 Transaccion.Rollback();
                 bExito = false;
                 FbError = ex.Message;
+                Logger.AgregarLog("............ Error: " + ex.Message);
             }
             finally
             {
@@ -299,7 +300,7 @@ namespace AjustesDeInventario.DAL
         private void InsertarDetalles(FbConnection objConexion, FbTransaction objTransaccion, 
                                       string Naturaleza, List<Cedula> lstDetalles, List<Articulo> lstArticulos)
         {
-            int ConceptoID = 0;
+            int ConceptoID = 0, NoEncontrados = 0;
             if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
             else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
 
@@ -309,13 +310,15 @@ namespace AjustesDeInventario.DAL
             foreach (Cedula Movimiento in lstDetalles)
             {
                 double Unidades = 0;
-                if (Naturaleza == "E") { Unidades = Movimiento.Sobrante; }
-                else if (Naturaleza == "S") { Unidades = Movimiento.Faltante; }
+                if (Naturaleza == "E") { Unidades = Math.Abs(Movimiento.Sobrante); }
+                else if (Naturaleza == "S") { Unidades = Math.Abs(Movimiento.Faltante); }
 
                 Articulo objArticulo = lstArticulos.Find(o => o.Clave == Movimiento.Clave);
                 if (objArticulo == null)
                 {
-                    throw new Exception("No se encontro el articulo con clave: " + Movimiento.Clave);
+                    Logger.AgregarLog("............ No se encontro el artículo con clave: " + Movimiento.Clave);
+                    NoEncontrados++;
+                    continue;                    
                 }
 
                 Comando.CommandText =
@@ -334,7 +337,7 @@ namespace AjustesDeInventario.DAL
                                       objArticulo.Articulo_ID,
                                       Naturaleza,
                                       Unidades,
-                                      Movimiento.CostoUnitario,
+                                      Math.Abs(Movimiento.CostoUnitario),
                                       FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
 
                 Comando.ExecuteNonQuery();
@@ -343,6 +346,8 @@ namespace AjustesDeInventario.DAL
                                   " | Clave Articulo: " + objArticulo.Clave + " | Unidades: " + Unidades + 
                                   " | Costo Unitario: " + Movimiento.CostoUnitario);
             }
+
+            Logger.AgregarLog("............ No se encontraron " + NoEncontrados + " artículos");
         }
 
         private string getStringConnection()
