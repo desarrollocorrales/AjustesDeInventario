@@ -263,23 +263,35 @@ namespace AjustesDeInventario.DAL
         private void CrearEncabezado(FbConnection objConexion, FbTransaction objTransaccion, string Naturaleza)
         {
             int ConceptoID = 0;
-            if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
-            else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
+            string Descripcion = string.Empty;
+
+            if (Naturaleza == "E") 
+            { 
+                ConceptoID = FiltrosInventario.ConceptoEntradaID;
+                Descripcion = "Sobrantes. Resultado de inventario físico";
+
+            }
+            else if (Naturaleza == "S") 
+            { 
+                ConceptoID = FiltrosInventario.ConceptoSalidaID;
+                Descripcion = "Faltantes. Resultado de inventario físico";
+            }
 
             Comando.Connection = objConexion;
             Comando.Transaction = objTransaccion;
             Comando.CommandText =
                 String.Format(@"INSERT INTO 
                                   DOCTOS_IN (DOCTO_IN_ID, ALMACEN_ID, CONCEPTO_IN_ID, 
-                                             FOLIO, NATURALEZA_CONCEPTO, FECHA, SISTEMA_ORIGEN) 
+                                             FOLIO, NATURALEZA_CONCEPTO, FECHA, SISTEMA_ORIGEN, DESCRIPCION) 
                                 VALUES
-                                  (-1, {0}, {1}, '{3}{2}', '{3}', '{4}', 'IN')
+                                  (-1, {0}, {1}, '{3}{2}', '{3}', '{4}', 'IN', '{5}')
                                 RETURNING DOCTO_IN_ID", 
                                   FiltrosInventario.AlmacenID,
                                   ConceptoID,
                                   FiltrosInventario.FechaServer.ToString("ddMMyyyy"),
                                   Naturaleza,
-                                  FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
+                                  FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"),
+                                  Descripcion);
 
             object obj = Comando.ExecuteScalar();
 

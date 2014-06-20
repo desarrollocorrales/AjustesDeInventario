@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.btnProcesar = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.gbMicrosip = new System.Windows.Forms.GroupBox();
@@ -50,7 +49,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.gbAcciones = new System.Windows.Forms.GroupBox();
             this.gridResultados = new DevExpress.XtraGrid.GridControl();
-            this.cedulaBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cedulaBindingSource = new System.Windows.Forms.BindingSource();
             this.gvResultados = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colClave = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDescripcion = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -58,7 +57,8 @@
             this.colFaltante = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colSobrante = new DevExpress.XtraGrid.Columns.GridColumn();
             this.dialogoArchivos = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.bgwProceso = new System.ComponentModel.BackgroundWorker();
+            this.pbCargando = new System.Windows.Forms.PictureBox();
             this.gbMicrosip.SuspendLayout();
             this.pnFiltros.SuspendLayout();
             this.gbInventario.SuspendLayout();
@@ -66,6 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridResultados)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cedulaBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvResultados)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCargando)).BeginInit();
             this.SuspendLayout();
             // 
             // btnProcesar
@@ -104,7 +105,7 @@
             this.gbMicrosip.Size = new System.Drawing.Size(760, 190);
             this.gbMicrosip.TabIndex = 3;
             this.gbMicrosip.TabStop = false;
-            this.gbMicrosip.Text = "Datos Microsip";
+            this.gbMicrosip.Text = "(1) Datos Microsip";
             // 
             // btnPruebaConexion
             // 
@@ -124,7 +125,7 @@
             this.lblEstadoMicrosip.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblEstadoMicrosip.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEstadoMicrosip.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEstadoMicrosip.Location = new System.Drawing.Point(7, 156);
             this.lblEstadoMicrosip.Name = "lblEstadoMicrosip";
             this.lblEstadoMicrosip.Size = new System.Drawing.Size(746, 31);
@@ -256,7 +257,7 @@
             this.gbInventario.Size = new System.Drawing.Size(760, 72);
             this.gbInventario.TabIndex = 5;
             this.gbInventario.TabStop = false;
-            this.gbInventario.Text = "Resultados del inventario";
+            this.gbInventario.Text = "(2) Resultados del inventario";
             // 
             // btnBuscarExcel
             // 
@@ -299,7 +300,7 @@
             this.gbAcciones.Size = new System.Drawing.Size(760, 299);
             this.gbAcciones.TabIndex = 6;
             this.gbAcciones.TabStop = false;
-            this.gbAcciones.Text = "Resultados del inventario";
+            this.gbAcciones.Text = "(3) Resultados del inventario";
             // 
             // gridResultados
             // 
@@ -514,22 +515,29 @@
             this.dialogoArchivos.FileName = "*.set";
             this.dialogoArchivos.Filter = "Archivos .SET | *.set";
             // 
-            // button1
+            // bgwProceso
             // 
-            this.button1.Location = new System.Drawing.Point(691, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.bgwProceso.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwProceso_DoWork);
+            this.bgwProceso.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwProceso_RunWorkerCompleted);
+            // 
+            // pbCargando
+            // 
+            this.pbCargando.BackColor = System.Drawing.SystemColors.Control;
+            this.pbCargando.Image = global::AjustesDeInventario.Properties.Resources.LoadingCircle_firstani;
+            this.pbCargando.Location = new System.Drawing.Point(204, 156);
+            this.pbCargando.Name = "pbCargando";
+            this.pbCargando.Size = new System.Drawing.Size(376, 351);
+            this.pbCargando.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbCargando.TabIndex = 7;
+            this.pbCargando.TabStop = false;
+            this.pbCargando.Visible = false;
             // 
             // Frm_Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 662);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.pbCargando);
             this.Controls.Add(this.gbAcciones);
             this.Controls.Add(this.gbInventario);
             this.Controls.Add(this.label2);
@@ -550,6 +558,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridResultados)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cedulaBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvResultados)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCargando)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -585,6 +594,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbAlmacenes;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
+        private System.ComponentModel.BackgroundWorker bgwProceso;
+        private System.Windows.Forms.PictureBox pbCargando;
     }
 }

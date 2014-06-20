@@ -14,9 +14,11 @@ namespace AjustesDeInventario.GUIs
 {
     public partial class Frm_Principal : Form
     {
+        private bool Success;
         private string Empresa;
         private string RutaArchivoMicrosip;
         private string RutaArchivoExcel;
+        private string sError;
         private Microsip objMicrosip;
         private bool PruebaDeConexion;
         private List<Cedula> lstDatosCedula;
@@ -61,7 +63,7 @@ namespace AjustesDeInventario.GUIs
                 bool prueba_de_conexion = FbDal.ProbarConexion();
                 if (prueba_de_conexion == true)
                 {
-                    MessageBox.Show("La conexión se ha realizado con exito!!!");
+                    //MessageBox.Show("La conexión se ha realizado con exito!!!");
 
                     Empresa = FbDal.Empresa;
                     lblEstadoMicrosip.Text = "Sucursal: " + FbDal.Empresa;
@@ -84,10 +86,8 @@ namespace AjustesDeInventario.GUIs
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("Ocurrio un error al realizar la conexión a Microsip.");
-                    sb.AppendLine(FbDal.FbError);
-                    MessageBox.Show(sb.ToString());
-
-                    lblEstadoMicrosip.Text = "Error: " + FbDal.FbError;
+                    sb.AppendLine("Error: " + FbDal.FbError);
+                    lblEstadoMicrosip.Text = sb.ToString();
                     lblEstadoMicrosip.ForeColor = System.Drawing.Color.Red;
                     PruebaDeConexion = false;
 
@@ -189,7 +189,9 @@ namespace AjustesDeInventario.GUIs
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dr == DialogResult.Yes)
                     {
-                        ExportarResultados();
+                        //ExportarResultados();
+                        bgwProceso.RunWorkerAsync();
+                        pbCargando.Visible = true;
                     }
                 }
                 else
@@ -200,13 +202,15 @@ namespace AjustesDeInventario.GUIs
             }
             else
             {
-                MessageBox.Show("Primero debe realizar una prueba de conexión a Microsip...", "Error", 
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Primero debe realizar una prueba de conexión a Microsip...");
+                sb.AppendLine("Seleccione un archivo de configuración y presione el boton 'Probar Conexión'");
+                MessageBox.Show(sb.ToString(), "Error", 
                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ExportarResultados()
+        private bool ExportarResultados()
         {
-            MessageBox.Show("Exportar Resultados");
             Logger.AgregarLog("****************************** Inicio ******************************"); 
             Logger.AgregarLog("Inicia el proceso para la empresa " + objMicrosip.Sucusal);
             
@@ -228,17 +232,12 @@ namespace AjustesDeInventario.GUIs
 
             //Ejecutar el proceso para actualizar los detos de Microsip
             bool exito = FbDal.ExportarResultadosAMicrosip(lstDatosCedula, lstArticulos);
-            if (exito == true)
-            {
-                MessageBox.Show("todo bien");
-            }
-            else
-            {
-                MessageBox.Show(FbDal.FbError);
-            }
+            sError = FbDal.FbError;
 
             Logger.AgregarLog("******************************* Final ******************************");
-            Logger.AgregarLog(); 
+            Logger.AgregarLog();
+
+            return exito;
         }
 
         private void Frm_Principal_Load(object sender, EventArgs e)
@@ -252,17 +251,29 @@ namespace AjustesDeInventario.GUIs
 
         private void cbAlmacenes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FiltrosInventario.AlmacenID = ((Almacen)(cbAlmacenes.SelectedItem)).ID;
+            object obj = cbAlmacenes.SelectedItem;
+            if (obj != null)
+                FiltrosInventario.AlmacenID = ((Almacen)(cbAlmacenes.SelectedItem)).ID;
+            else
+                FiltrosInventario.AlmacenID = 0;
         }
 
         private void cbConceptoEntrada_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FiltrosInventario.ConceptoEntradaID = ((ConceptoInventario)(cbConceptoEntrada.SelectedItem)).ID;
+            object obj = cbAlmacenes.SelectedItem;
+            if (obj != null)
+                FiltrosInventario.ConceptoEntradaID = ((ConceptoInventario)(cbConceptoEntrada.SelectedItem)).ID;
+            else
+                FiltrosInventario.ConceptoEntradaID = 0;
         }
 
         private void cbConceptoSalida_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FiltrosInventario.ConceptoSalidaID = ((ConceptoInventario)(cbConceptoSalida.SelectedItem)).ID;
+            object obj = cbAlmacenes.SelectedItem;
+            if (obj != null)
+                FiltrosInventario.ConceptoSalidaID = ((ConceptoInventario)(cbConceptoSalida.SelectedItem)).ID;
+            else
+                FiltrosInventario.ConceptoSalidaID = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -271,6 +282,28 @@ namespace AjustesDeInventario.GUIs
                             FiltrosInventario.ConceptoEntradaID + " | " +
                             FiltrosInventario.ConceptoSalidaID + " | " +
                             FiltrosInventario.FechaServer + " }");
+        }
+
+        private void bgwProceso_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            Success = ExportarResultados();
+        }
+
+        private void bgwProceso_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            pbCargando.Visible = false;
+            if (Success == true)
+            {
+                MessageBox.Show("El proceso ha terminado con exito!!!", "OK",
+                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                if (sError.Contains("DOCTOS_IN_AK1"))
+                    sError = "El proceso ya fue realizado...";
+
+                MessageBox.Show(sError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

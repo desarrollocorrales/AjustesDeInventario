@@ -34,6 +34,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icono.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AjustesDeInventario.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AccSettings">
       <HintPath>.\AccSettings.dll</HintPath>
@@ -114,9 +120,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Cargando.gif" />
     <Content Include="Configuraciones\Leeme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icono.ico" />
+    <None Include="LoadingCircle_firstani.gif" />
     <Content Include="Logs\Leeme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

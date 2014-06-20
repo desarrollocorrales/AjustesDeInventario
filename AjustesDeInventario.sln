@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AjustesDeInventario", "AjustesDeInventario\AjustesDeInventario.csproj", "{4F71246D-8B83-4FF4-BFD3-DB3AFE834103}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Ajustes De Inventario Installer", "Ajustes De Inventario Installer\Ajustes De Inventario Installer.vdproj", "{B2BF8629-7881-4F63-8668-6B97BACC9B7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,8 @@ Global
 		{4F71246D-8B83-4FF4-BFD3-DB3AFE834103}.Debug|x86.Build.0 = Debug|x86
 		{4F71246D-8B83-4FF4-BFD3-DB3AFE834103}.Release|x86.ActiveCfg = Release|x86
 		{4F71246D-8B83-4FF4-BFD3-DB3AFE834103}.Release|x86.Build.0 = Release|x86
+		{B2BF8629-7881-4F63-8668-6B97BACC9B7E}.Debug|x86.ActiveCfg = Debug
+		{B2BF8629-7881-4F63-8668-6B97BACC9B7E}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
