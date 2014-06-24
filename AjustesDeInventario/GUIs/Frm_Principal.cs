@@ -73,10 +73,10 @@ namespace AjustesDeInventario.GUIs
                     cbAlmacenes.DataSource = FbDal.ObtenerAlmacenes();
                     cbAlmacenes.DisplayMember = "Nombre";
                     cbAlmacenes.ValueMember = "ID";
-                    cbConceptoEntrada.DataSource = FbDal.ObtenerConceptosInventario();
+                    cbConceptoEntrada.DataSource = FbDal.ObtenerConceptosInventario().FindAll(o => o.ID == 26);
                     cbConceptoEntrada.DisplayMember = "Nombre";
                     cbConceptoEntrada.ValueMember = "ID";
-                    cbConceptoSalida.DataSource = FbDal.ObtenerConceptosInventario();
+                    cbConceptoSalida.DataSource = FbDal.ObtenerConceptosInventario().FindAll(o => o.ID == 37);
                     cbConceptoSalida.DisplayMember = "Nombre";
                     cbConceptoSalida.ValueMember = "ID";
                     FiltrosInventario.FechaServer = FbDal.obtenerFechaDelServidor();

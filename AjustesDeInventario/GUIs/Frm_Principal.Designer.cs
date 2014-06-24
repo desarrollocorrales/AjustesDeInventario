@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Principal));
             this.btnProcesar = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.gbMicrosip = new System.Windows.Forms.GroupBox();
@@ -49,7 +51,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.gbAcciones = new System.Windows.Forms.GroupBox();
             this.gridResultados = new DevExpress.XtraGrid.GridControl();
-            this.cedulaBindingSource = new System.Windows.Forms.BindingSource();
+            this.cedulaBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvResultados = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colClave = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDescripcion = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -175,7 +177,9 @@
             // 
             this.cbConceptoSalida.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbConceptoSalida.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbConceptoSalida.BackColor = System.Drawing.Color.White;
+            this.cbConceptoSalida.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.cbConceptoSalida.Enabled = false;
             this.cbConceptoSalida.FormattingEnabled = true;
             this.cbConceptoSalida.Location = new System.Drawing.Point(192, 70);
             this.cbConceptoSalida.Name = "cbConceptoSalida";
@@ -196,7 +200,9 @@
             // 
             this.cbConceptoEntrada.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbConceptoEntrada.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbConceptoEntrada.BackColor = System.Drawing.Color.White;
+            this.cbConceptoEntrada.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
+            this.cbConceptoEntrada.Enabled = false;
             this.cbConceptoEntrada.FormattingEnabled = true;
             this.cbConceptoEntrada.Location = new System.Drawing.Point(192, 38);
             this.cbConceptoEntrada.Name = "cbConceptoEntrada";
@@ -257,7 +263,7 @@
             this.gbInventario.Size = new System.Drawing.Size(760, 72);
             this.gbInventario.TabIndex = 5;
             this.gbInventario.TabStop = false;
-            this.gbInventario.Text = "(2) Resultados del inventario";
+            this.gbInventario.Text = "(2) Archivo de resultados";
             // 
             // btnBuscarExcel
             // 
@@ -544,8 +550,10 @@
             this.Controls.Add(this.gbMicrosip);
             this.Controls.Add(this.btnProcesar);
             this.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Frm_Principal";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Exportar resultados de inventario a Microsip";
             this.Load += new System.EventHandler(this.Frm_Principal_Load);
             this.gbMicrosip.ResumeLayout(false);
