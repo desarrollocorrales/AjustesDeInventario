@@ -352,7 +352,7 @@ namespace AjustesDeInventario.DAL
                                       Math.Abs(Movimiento.CostoUnitario),
                                       FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
 
-                Comando.ExecuteNonQuery();
+                int i = Comando.ExecuteNonQuery();
 
                 Logger.AgregarLog("............ Insertado movimiento con naturaleza '" + Naturaleza + "'" +
                                   " | Clave Articulo: " + objArticulo.Clave + " | Unidades: " + Unidades + 

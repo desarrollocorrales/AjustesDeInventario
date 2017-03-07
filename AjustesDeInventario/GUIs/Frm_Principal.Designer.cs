@@ -61,6 +61,8 @@
             this.dialogoArchivos = new System.Windows.Forms.OpenFileDialog();
             this.bgwProceso = new System.ComponentModel.BackgroundWorker();
             this.pbCargando = new System.Windows.Forms.PictureBox();
+            this.btnExportarSalidas = new System.Windows.Forms.Button();
+            this.bgwSalidas = new System.ComponentModel.BackgroundWorker();
             this.gbMicrosip.SuspendLayout();
             this.pnFiltros.SuspendLayout();
             this.gbInventario.SuspendLayout();
@@ -74,12 +76,12 @@
             // btnProcesar
             // 
             this.btnProcesar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnProcesar.Location = new System.Drawing.Point(302, 618);
+            this.btnProcesar.Location = new System.Drawing.Point(169, 618);
             this.btnProcesar.Margin = new System.Windows.Forms.Padding(4);
             this.btnProcesar.Name = "btnProcesar";
-            this.btnProcesar.Size = new System.Drawing.Size(181, 31);
+            this.btnProcesar.Size = new System.Drawing.Size(219, 31);
             this.btnProcesar.TabIndex = 0;
-            this.btnProcesar.Text = "Exportar a Microsip";
+            this.btnProcesar.Text = "Exportar Entradas a Microsip";
             this.btnProcesar.UseVisualStyleBackColor = true;
             this.btnProcesar.Click += new System.EventHandler(this.btnProcesar_Click);
             // 
@@ -530,19 +532,37 @@
             // 
             this.pbCargando.BackColor = System.Drawing.SystemColors.Control;
             this.pbCargando.Image = global::AjustesDeInventario.Properties.Resources.LoadingCircle_firstani;
-            this.pbCargando.Location = new System.Drawing.Point(204, 156);
+            this.pbCargando.Location = new System.Drawing.Point(212, 156);
             this.pbCargando.Name = "pbCargando";
-            this.pbCargando.Size = new System.Drawing.Size(376, 351);
+            this.pbCargando.Size = new System.Drawing.Size(360, 351);
             this.pbCargando.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbCargando.TabIndex = 7;
             this.pbCargando.TabStop = false;
             this.pbCargando.Visible = false;
+            // 
+            // btnExportarSalidas
+            // 
+            this.btnExportarSalidas.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnExportarSalidas.Location = new System.Drawing.Point(396, 618);
+            this.btnExportarSalidas.Margin = new System.Windows.Forms.Padding(4);
+            this.btnExportarSalidas.Name = "btnExportarSalidas";
+            this.btnExportarSalidas.Size = new System.Drawing.Size(219, 31);
+            this.btnExportarSalidas.TabIndex = 8;
+            this.btnExportarSalidas.Text = "Exportar Salidas a Microsip";
+            this.btnExportarSalidas.UseVisualStyleBackColor = true;
+            this.btnExportarSalidas.Click += new System.EventHandler(this.btnExportarSalidas_Click);
+            // 
+            // bgwSalidas
+            // 
+            this.bgwSalidas.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwSalidas_DoWork);
+            this.bgwSalidas.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwSalidas_RunWorkerCompleted);
             // 
             // Frm_Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 662);
+            this.Controls.Add(this.btnExportarSalidas);
             this.Controls.Add(this.pbCargando);
             this.Controls.Add(this.gbAcciones);
             this.Controls.Add(this.gbInventario);
@@ -555,6 +575,7 @@
             this.Name = "Frm_Principal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Exportar resultados de inventario a Microsip";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Frm_Principal_FormClosing);
             this.Load += new System.EventHandler(this.Frm_Principal_Load);
             this.gbMicrosip.ResumeLayout(false);
             this.gbMicrosip.PerformLayout();
@@ -604,5 +625,7 @@
         private System.Windows.Forms.Label label5;
         private System.ComponentModel.BackgroundWorker bgwProceso;
         private System.Windows.Forms.PictureBox pbCargando;
+        private System.Windows.Forms.Button btnExportarSalidas;
+        private System.ComponentModel.BackgroundWorker bgwSalidas;
     }
 }

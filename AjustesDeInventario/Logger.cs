@@ -8,6 +8,13 @@ namespace AjustesDeInventario
 {
     public static class Logger
     {
+        public static void BorrarLog()
+        {
+            string sFileName = "Inventario_" + DateTime.Now.ToString("ddMMyyyy") + ".log";
+            StreamWriter swFile = new StreamWriter(Environment.CurrentDirectory + "\\Logs\\" + sFileName, false);
+            swFile.Close();
+        }
+
         public static void AgregarLog(string Mensaje)
         {
             string sFileName = "Inventario_" + DateTime.Now.ToString("ddMMyyyy") + ".log";
