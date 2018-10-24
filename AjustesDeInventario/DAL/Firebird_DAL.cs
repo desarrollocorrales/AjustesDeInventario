@@ -233,6 +233,8 @@ namespace AjustesDeInventario.DAL
                 Transaccion.Commit();
                 bExito = true;
             }
+            
+            
             catch (Exception ex)
             {
                 Transaccion.Rollback();
@@ -312,29 +314,31 @@ namespace AjustesDeInventario.DAL
         private void InsertarDetalles(FbConnection objConexion, FbTransaction objTransaccion, 
                                       string Naturaleza, List<Cedula> lstDetalles, List<Articulo> lstArticulos)
         {
-            int ConceptoID = 0, NoEncontrados = 0;
-            if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
-            else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
-
-            Comando.Connection = objConexion;
-            Comando.Transaction = objTransaccion;
-
-            foreach (Cedula Movimiento in lstDetalles)
+            try
             {
-                double Unidades = 0;
-                if (Naturaleza == "E") { Unidades = Math.Abs(Movimiento.Sobrante); }
-                else if (Naturaleza == "S") { Unidades = Math.Abs(Movimiento.Faltante); }
+                int ConceptoID = 0, NoEncontrados = 0;
+                if (Naturaleza == "E") { ConceptoID = FiltrosInventario.ConceptoEntradaID; }
+                else if (Naturaleza == "S") { ConceptoID = FiltrosInventario.ConceptoSalidaID; }
 
-                Articulo objArticulo = lstArticulos.Find(o => o.Clave == Movimiento.Clave);
-                if (objArticulo == null)
+                Comando.Connection = objConexion;
+                Comando.Transaction = objTransaccion;
+
+                foreach (Cedula Movimiento in lstDetalles)
                 {
-                    Logger.AgregarLog("............ No se encontro el artículo con clave: " + Movimiento.Clave);
-                    NoEncontrados++;
-                    continue;                    
-                }
+                    double Unidades = 0;
+                    if (Naturaleza == "E") { Unidades = Math.Abs(Movimiento.Sobrante); }
+                    else if (Naturaleza == "S") { Unidades = Math.Abs(Movimiento.Faltante); }
 
-                Comando.CommandText =
-                    String.Format(@"INSERT INTO DOCTOS_IN_DET
+                    Articulo objArticulo = lstArticulos.Find(o => o.Clave == Movimiento.Clave);
+                    if (objArticulo == null)
+                    {
+                        Logger.AgregarLog("............ No se encontro el artículo con clave: " + Movimiento.Clave);
+                        NoEncontrados++;
+                        continue;
+                    }
+
+                    Comando.CommandText =
+                        String.Format(@"INSERT INTO DOCTOS_IN_DET
                                         (DOCTO_IN_DET_ID, DOCTO_IN_ID, ALMACEN_ID, CONCEPTO_IN_ID, 
                                          CLAVE_ARTICULO, ARTICULO_ID, TIPO_MOVTO, UNIDADES, COSTO_UNITARIO, 
                                          COSTO_TOTAL, APLICADO, METODO_COSTEO, FECHA)
@@ -342,24 +346,27 @@ namespace AjustesDeInventario.DAL
                                         (-1, {0}, {1}, {2}, 
                                          '{3}', {4}, '{5}', {6}, {7}, ({6}*{7}),
                                          'S', 'C', '{8}')",
-                                      DoctoID, 
-                                      FiltrosInventario.AlmacenID, 
-                                      ConceptoID,
-                                      objArticulo.Clave,
-                                      objArticulo.Articulo_ID,
-                                      Naturaleza,
-                                      Unidades,
-                                      Math.Abs(Movimiento.CostoUnitario),
-                                      FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
+                                          DoctoID,
+                                          FiltrosInventario.AlmacenID,
+                                          ConceptoID,
+                                          objArticulo.Clave,
+                                          objArticulo.Articulo_ID,
+                                          Naturaleza,
+                                          Unidades,
+                                          Math.Abs(Movimiento.CostoUnitario),
+                                          FiltrosInventario.FechaServer.ToString("yyyy-MM-dd"));
 
-                Comando.ExecuteNonQuery();
+                    Comando.ExecuteNonQuery();
 
-                Logger.AgregarLog("............ Insertado movimiento con naturaleza '" + Naturaleza + "'" +
-                                  " | Clave Articulo: " + objArticulo.Clave + " | Unidades: " + Unidades + 
-                                  " | Costo Unitario: " + Movimiento.CostoUnitario);
+                    Logger.AgregarLog("............ Insertado movimiento con naturaleza '" + Naturaleza + "'" +
+                                      " | Clave Articulo: " + objArticulo.Clave + " | Unidades: " + Unidades +
+                                      " | Costo Unitario: " + Movimiento.CostoUnitario);
+                }
+
+                Logger.AgregarLog("............ No se encontraron " + NoEncontrados + " artículos");
             }
-
-            Logger.AgregarLog("............ No se encontraron " + NoEncontrados + " artículos");
+            catch (Exception ex)
+            { throw ex; }
         }
 
         private string getStringConnection()

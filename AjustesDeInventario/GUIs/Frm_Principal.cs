@@ -115,11 +115,19 @@ namespace AjustesDeInventario.GUIs
                 Application.DoEvents();
 
                 objMicrosip = new Microsip();
-                objMicrosip.Sucusal = MicrosipSettings.Conexiones[0].Empresa;
-                objMicrosip.BaseDeDatos = MicrosipSettings.Conexiones[0].Host;
-                objMicrosip.Usuario = MicrosipSettings.Conexiones[0].Usuario;
-                objMicrosip.Contraseña = MicrosipSettings.Conexiones[0].PassWord;
-                objMicrosip.Puerto = MicrosipSettings.Conexiones[0].Puerto;
+                objMicrosip.Sucusal = "ABASTECEDORA LOCAL"; //MicrosipSettings.Conexiones[0].Empresa;
+                objMicrosip.BaseDeDatos = @"G:\Microsip datos\Microsip_datos_LIBERTAD\HCONUEVA.FDB"; //MicrosipSettings.Conexiones[0].Host;
+                objMicrosip.Usuario = "SYSDBA"; // MicrosipSettings.Conexiones[0].Usuario;
+                objMicrosip.Contraseña = "masterkey"; // MicrosipSettings.Conexiones[0].PassWord;
+                objMicrosip.Puerto = 3050; // MicrosipSettings.Conexiones[0].Puerto;
+
+
+                //objMicrosip.Sucusal = MicrosipSettings.Conexiones[0].Empresa;
+                //objMicrosip.BaseDeDatos = MicrosipSettings.Conexiones[0].Host;
+                //objMicrosip.Usuario = MicrosipSettings.Conexiones[0].Usuario;
+                //objMicrosip.Contraseña = MicrosipSettings.Conexiones[0].PassWord;
+                //objMicrosip.Puerto = MicrosipSettings.Conexiones[0].Puerto;
+
                 return true;
             }
             catch (Exception ex)
