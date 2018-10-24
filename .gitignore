@@ -213,3 +213,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+AjustesDeInventario/DAL/Firebird_DAL.cs
+*.xls
